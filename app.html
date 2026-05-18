@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PersonalDB — Dashboard</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/app.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="app-page">
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <div class="logo-mark small">
+      <span class="logo-bracket">[</span>
+      <span class="logo-text">PDB</span>
+      <span class="logo-bracket">]</span>
+    </div>
+    <button class="sidebar-toggle" onclick="toggleSidebar()" title="Sulge menüü">✕</button>
+  </div>
+
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">PÕHI</div>
+    <a class="nav-item active" onclick="showSection('dashboard')" data-section="dashboard">
+      <span class="nav-icon">⬛</span> Dashboard
+    </a>
+    <a class="nav-item" onclick="showSection('notes')" data-section="notes">
+      <span class="nav-icon">📝</span> Märkmed
+    </a>
+    <a class="nav-item" onclick="showSection('search')" data-section="search">
+      <span class="nav-icon">🔍</span> Otsing
+    </a>
+
+    <div class="nav-section-label">IT TÖÖRIISTAD</div>
+    <a class="nav-item" onclick="showSection('commands')" data-section="commands">
+      <span class="nav-icon">⌨️</span> Käsud & Skriptid
+    </a>
+    <a class="nav-item" onclick="showSection('passwords')" data-section="passwords">
+      <span class="nav-icon">🔐</span> Paroolid & Ligipääsud
+    </a>
+    <a class="nav-item" onclick="showSection('network')" data-section="network">
+      <span class="nav-icon">🌐</span> Võrgu Info
+    </a>
+    <a class="nav-item" onclick="showSection('projects')" data-section="projects">
+      <span class="nav-icon">💻</span> Projektid
+    </a>
+    <a class="nav-item" onclick="showSection('tools')" data-section="tools">
+      <span class="nav-icon">🛠️</span> Tööriistad & Lingid
+    </a>
+
+    <div class="nav-section-label">KOOL</div>
+    <a class="nav-item" onclick="showSection('subjects')" data-section="subjects">
+      <span class="nav-icon">📚</span> Ained & Õppematerjal
+    </a>
+    <a class="nav-item" onclick="showSection('assignments')" data-section="assignments">
+      <span class="nav-icon">📋</span> Kodutööd & Tähtajad
+    </a>
+    <a class="nav-item" onclick="showSection('grades')" data-section="grades">
+      <span class="nav-icon">🎓</span> Hinded
+    </a>
+
+    <div class="nav-section-label">ISIKLIK</div>
+    <a class="nav-item" onclick="showSection('gallery')" data-section="gallery">
+      <span class="nav-icon">🖼️</span> Galerii
+    </a>
+    <a class="nav-item" onclick="showSection('contacts')" data-section="contacts">
+      <span class="nav-icon">👤</span> Kontaktid
+    </a>
+    <a class="nav-item" onclick="showSection('finances')" data-section="finances">
+      <span class="nav-icon">💰</span> Rahandus
+    </a>
+    <a class="nav-item" onclick="showSection('general')" data-section="general">
+      <span class="nav-icon">ℹ️</span> Üldinfo
+    </a>
+    <a class="nav-item" onclick="showSection('links')" data-section="links">
+      <span class="nav-icon">🔗</span> Olulised Lingid
+    </a>
+
+    <div class="nav-section-label">SÜSTEEM</div>
+    <a class="nav-item" onclick="showSection('settings')" data-section="settings">
+      <span class="nav-icon">⚙️</span> Seaded
+    </a>
+    <a class="nav-item" onclick="doLogout()">
+      <span class="nav-icon">🚪</span> Logi välja
+    </a>
+  </nav>
+</aside>
+
+<!-- TOPBAR -->
+<div class="topbar" id="topbar">
+  <button class="hamburger" onclick="toggleSidebar()">☰</button>
+  <div class="topbar-title" id="topbarTitle">Dashboard</div>
+  <div class="topbar-actions">
+    <span class="user-badge" id="userBadge">…</span>
+    <button class="btn-export" onclick="exportData()" title="Ekspordi andmed">↓ Eksport</button>
+    <label class="btn-import" title="Impordi andmed">
+      ↑ Import <input type="file" id="importFile" accept=".json" onchange="importData(event)" style="display:none">
+    </label>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<main class="main-content" id="mainContent">
+
+  <!-- DASHBOARD -->
+  <section id="sec-dashboard" class="section active">
+    <div class="section-header">
+      <h2>Dashboard</h2>
+      <span class="header-tag">Ülevaade</span>
+    </div>
+    <div class="stats-grid" id="statsGrid"></div>
+    <div class="recent-grid">
+      <div class="recent-col">
+        <h3 class="recent-title">📝 Viimased märkmed</h3>
+        <div id="recentNotes"></div>
+      </div>
+      <div class="recent-col">
+        <h3 class="recent-title">📋 Lähenevad tähtajad</h3>
+        <div id="upcomingDeadlines"></div>
+      </div>
+      <div class="recent-col">
+        <h3 class="recent-title">💻 Viimased projektid</h3>
+        <div id="recentProjects"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEARCH -->
+  <section id="sec-search" class="section">
+    <div class="section-header">
+      <h2>Globaalne otsing</h2>
+    </div>
+    <div class="search-bar">
+      <input type="text" id="globalSearch" placeholder="Otsi kõigest..." oninput="globalSearchFn()" />
+    </div>
+    <div id="searchResults" class="search-results"></div>
+  </section>
+
+  <!-- NOTES -->
+  <section id="sec-notes" class="section">
+    <div class="section-header">
+      <h2>Märkmed</h2>
+      <button class="btn-add" onclick="openModal('note')">+ Lisa märkus</button>
+    </div>
+    <div class="filter-bar">
+      <input type="text" id="noteSearch" placeholder="Otsi märkmeid..." oninput="filterNotes()" />
+      <select id="noteTagFilter" onchange="filterNotes()">
+        <option value="">Kõik sildid</option>
+      </select>
+    </div>
+    <div id="notesList" class="cards-grid"></div>
+  </section>
+
+  <!-- COMMANDS -->
+  <section id="sec-commands" class="section">
+    <div class="section-header">
+      <h2>Käsud & Skriptid</h2>
+      <button class="btn-add" onclick="openModal('command')">+ Lisa käsk</button>
+    </div>
+    <div class="filter-bar">
+      <input type="text" id="cmdSearch" placeholder="Otsi käske..." oninput="filterCommands()" />
+      <select id="cmdCatFilter" onchange="filterCommands()">
+        <option value="">Kõik kategooriad</option>
+        <option>Linux</option><option>Windows</option><option>Git</option>
+        <option>Docker</option><option>Network</option><option>Python</option>
+        <option>Bash</option><option>PowerShell</option><option>Muu</option>
+      </select>
+    </div>
+    <div id="commandsList" class="commands-list"></div>
+  </section>
+
+  <!-- PASSWORDS -->
+  <section id="sec-passwords" class="section">
+    <div class="section-header">
+      <h2>Paroolid & Ligipääsud</h2>
+      <button class="btn-add" onclick="openModal('password')">+ Lisa kirje</button>
+    </div>
+    <div class="security-notice">
+      🔒 Paroolid salvestatakse kohalikult. Kasuta eksporti ainult turvalises kohas.
+    </div>
+    <div class="filter-bar">
+      <input type="text" id="passSearch" placeholder="Otsi..." oninput="filterPasswords()" />
+    </div>
+    <div id="passwordsList" class="cards-grid"></div>
+  </section>
+
+  <!-- NETWORK -->
+  <section id="sec-network" class="section">
+    <div class="section-header">
+      <h2>Võrgu Info</h2>
+      <button class="btn-add" onclick="openModal('network')">+ Lisa võrguseade</button>
+    </div>
+    <div id="networkList" class="cards-grid"></div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="sec-projects" class="section">
+    <div class="section-header">
+      <h2>Projektid</h2>
+      <button class="btn-add" onclick="openModal('project')">+ Lisa projekt</button>
+    </div>
+    <div class="filter-bar">
+      <select id="projStatus" onchange="filterProjects()">
+        <option value="">Kõik staatused</option>
+        <option>Aktiivne</option><option>Paus</option><option>Lõpetatud</option><option>Idee</option>
+      </select>
+    </div>
+    <div id="projectsList" class="projects-grid"></div>
+  </section>
+
+  <!-- TOOLS -->
+  <section id="sec-tools" class="section">
+    <div class="section-header">
+      <h2>Tööriistad & Lingid</h2>
+      <button class="btn-add" onclick="openModal('tool')">+ Lisa tööriist</button>
+    </div>
+    <div id="toolsList" class="tools-grid"></div>
+  </section>
+
+  <!-- SUBJECTS -->
+  <section id="sec-subjects" class="section">
+    <div class="section-header">
+      <h2>Ained & Õppematerjal</h2>
+      <button class="btn-add" onclick="openModal('subject')">+ Lisa aine</button>
+    </div>
+    <div id="subjectsList" class="cards-grid"></div>
+  </section>
+
+  <!-- ASSIGNMENTS -->
+  <section id="sec-assignments" class="section">
+    <div class="section-header">
+      <h2>Kodutööd & Tähtajad</h2>
+      <button class="btn-add" onclick="openModal('assignment')">+ Lisa kodutöö</button>
+    </div>
+    <div class="filter-bar">
+      <select id="assignFilter" onchange="filterAssignments()">
+        <option value="">Kõik</option>
+        <option>Tegemata</option><option>Tegemisel</option><option>Tehtud</option>
+      </select>
+    </div>
+    <div id="assignmentsList" class="assignments-list"></div>
+  </section>
+
+  <!-- GRADES -->
+  <section id="sec-grades" class="section">
+    <div class="section-header">
+      <h2>Hinded</h2>
+      <button class="btn-add" onclick="openModal('grade')">+ Lisa hinne</button>
+    </div>
+    <div id="gradeAvg" class="grade-average"></div>
+    <div id="gradesList" class="cards-grid"></div>
+  </section>
+
+  <!-- GALLERY -->
+  <section id="sec-gallery" class="section">
+    <div class="section-header">
+      <h2>Galerii</h2>
+      <button class="btn-add" onclick="openModal('gallery')">+ Lisa pilt</button>
+    </div>
+    <div class="filter-bar">
+      <select id="galleryFilter" onchange="filterGallery()">
+        <option value="">Kõik albumid</option>
+        <option>Kool</option><option>Eraelu</option><option>Projektid</option><option>Muu</option>
+      </select>
+    </div>
+    <div id="galleryGrid" class="gallery-grid"></div>
+  </section>
+
+  <!-- CONTACTS -->
+  <section id="sec-contacts" class="section">
+    <div class="section-header">
+      <h2>Kontaktid</h2>
+      <button class="btn-add" onclick="openModal('contact')">+ Lisa kontakt</button>
+    </div>
+    <div class="filter-bar">
+      <input type="text" id="contactSearch" placeholder="Otsi kontakte..." oninput="filterContacts()" />
+    </div>
+    <div id="contactsList" class="contacts-grid"></div>
+  </section>
+
+  <!-- FINANCES -->
+  <section id="sec-finances" class="section">
+    <div class="section-header">
+      <h2>Rahandus</h2>
+      <button class="btn-add" onclick="openModal('finance')">+ Lisa kanne</button>
+    </div>
+    <div id="financeSummary" class="finance-summary"></div>
+    <div class="filter-bar">
+      <select id="financeFilter" onchange="filterFinances()">
+        <option value="">Kõik</option><option>Tulu</option><option>Kulu</option>
+      </select>
+    </div>
+    <div id="financesList" class="cards-grid"></div>
+  </section>
+
+  <!-- GENERAL INFO -->
+  <section id="sec-general" class="section">
+    <div class="section-header">
+      <h2>Üldinfo</h2>
+      <button class="btn-add" onclick="openModal('info')">+ Lisa info</button>
+    </div>
+    <div id="generalList" class="cards-grid"></div>
+  </section>
+
+  <!-- LINKS -->
+  <section id="sec-links" class="section">
+    <div class="section-header">
+      <h2>Olulised Lingid</h2>
+      <button class="btn-add" onclick="openModal('link')">+ Lisa link</button>
+    </div>
+    <div id="linksList" class="links-grid"></div>
+  </section>
+
+  <!-- SETTINGS -->
+  <section id="sec-settings" class="section">
+    <div class="section-header">
+      <h2>Seaded</h2>
+    </div>
+    <div class="settings-grid">
+      <div class="settings-card">
+        <h3>🎨 Teema</h3>
+        <div class="theme-switcher">
+          <button onclick="setTheme('dark')" class="theme-btn" id="themeDark">Tume</button>
+          <button onclick="setTheme('light')" class="theme-btn" id="themeLight">Hele</button>
+          <button onclick="setTheme('cyber')" class="theme-btn" id="themeCyber">Cyber</button>
+        </div>
+      </div>
+      <div class="settings-card">
+        <h3>🔑 Muuda parooli</h3>
+        <div class="form-group">
+          <label>Praegune parool</label>
+          <input type="password" id="curPass" placeholder="••••••••" />
+        </div>
+        <div class="form-group">
+          <label>Uus parool</label>
+          <input type="password" id="chgPass1" placeholder="••••••••" />
+        </div>
+        <div class="form-group">
+          <label>Korda</label>
+          <input type="password" id="chgPass2" placeholder="••••••••" />
+        </div>
+        <button class="btn-add" onclick="changePassword()">Muuda parool</button>
+        <div id="passMsg" style="margin-top:8px;font-size:13px;"></div>
+      </div>
+      <div class="settings-card">
+        <h3>🗑️ Andmed</h3>
+        <p style="font-size:13px;opacity:0.7;margin-bottom:12px;">Kustuta kõik andmed (tagasipööramatu)</p>
+        <button class="btn-danger" onclick="clearAllData()">Kustuta kõik andmed</button>
+      </div>
+      <div class="settings-card">
+        <h3>📊 Statistika</h3>
+        <div id="dataStats"></div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- UNIVERSAL MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalOnOverlay(event)">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <h3 id="modalTitle">Lisa kirje</h3>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-footer">
+      <button class="btn-cancel-modal" onclick="closeModal()">Tühista</button>
+      <button class="btn-save" id="modalSaveBtn">Salvesta</button>
+    </div>
+  </div>
+</div>
+
+<!-- IMAGE LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <img id="lightboxImg" src="" alt="">
+  <div id="lightboxCaption"></div>
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+</div>
+
+<script src="js/auth.js"></script>
+<script src="js/db.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/sections.js"></script>
+<script src="js/modals.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
