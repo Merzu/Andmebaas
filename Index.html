@@ -1,1 +1,93 @@
-d
+<!DOCTYPE html>
+<html lang="et">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PersonalDB — Sisselogimine</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="login-page">
+
+<div class="login-bg">
+  <div class="grid-overlay"></div>
+  <div class="floating-shapes">
+    <span class="shape s1"></span>
+    <span class="shape s2"></span>
+    <span class="shape s3"></span>
+  </div>
+</div>
+
+<div class="login-container">
+  <div class="login-card">
+    <div class="login-header">
+      <div class="logo-mark">
+        <span class="logo-bracket">[</span>
+        <span class="logo-text">PDB</span>
+        <span class="logo-bracket">]</span>
+      </div>
+      <h1>PersonalDB</h1>
+      <p class="login-subtitle">Isiklik andmebaas — kõik ühes kohas</p>
+    </div>
+
+    <div id="loginError" class="error-msg" style="display:none"></div>
+
+    <div class="login-form">
+      <div class="form-group">
+        <label for="username">Kasutajanimi</label>
+        <input type="text" id="username" placeholder="kasutajanimi" autocomplete="username" />
+      </div>
+      <div class="form-group">
+        <label for="password">Parool</label>
+        <input type="password" id="password" placeholder="••••••••" autocomplete="current-password" />
+      </div>
+      <button class="btn-login" onclick="doLogin()">
+        Sisene <span class="btn-arrow">→</span>
+      </button>
+    </div>
+
+    <div class="setup-hint" id="setupHint" style="display:none">
+      <p>⚙️ Esimene kord? <a href="#" onclick="showSetup()">Seadista konto</a></p>
+    </div>
+
+    <div class="setup-form" id="setupForm" style="display:none">
+      <h3>Konto seadistamine</h3>
+      <div class="form-group">
+        <label>Uus kasutajanimi</label>
+        <input type="text" id="newUser" placeholder="kasutajanimi" />
+      </div>
+      <div class="form-group">
+        <label>Uus parool</label>
+        <input type="password" id="newPass" placeholder="min 6 tähemärki" />
+      </div>
+      <div class="form-group">
+        <label>Korda parooli</label>
+        <input type="password" id="newPass2" placeholder="••••••••" />
+      </div>
+      <button class="btn-setup" onclick="doSetup()">Loo konto</button>
+      <button class="btn-cancel" onclick="hideSetup()">Tühista</button>
+    </div>
+
+    <div class="login-footer">
+      <span class="version-tag">v2.0 · GitHub Pages</span>
+    </div>
+  </div>
+</div>
+
+<script src="js/auth.js"></script>
+<script>
+  window.onload = function() {
+    if (!localStorage.getItem('pdb_user')) {
+      document.getElementById('setupHint').style.display = 'block';
+    }
+    if (isLoggedIn()) {
+      window.location.href = 'app.html';
+    }
+    document.getElementById('password').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') doLogin();
+    });
+  };
+</script>
+</body>
+</html>
