@@ -189,7 +189,7 @@ function openModal(type, existingData) {
   currentModal = type;
   currentEditId = null;
 
-  document.getElementById('modalTitle').textContent = '+ Lisa: ' + config.title;
+  document.getElementById('modalTitle').textContent = t('modal_add') + config.title;
   renderModalForm(config, null);
   document.getElementById('modalOverlay').classList.add('open');
   document.getElementById('modalSaveBtn').onclick = () => saveModalData(type);
@@ -210,7 +210,7 @@ function openEditModal(type, id) {
   currentModal = type;
   currentEditId = id;
 
-  document.getElementById('modalTitle').textContent = '✏️ Muuda: ' + config.title;
+  document.getElementById('modalTitle').textContent = t('modal_edit') + config.title;
   renderModalForm(config, item);
   document.getElementById('modalOverlay').classList.add('open');
   document.getElementById('modalSaveBtn').onclick = () => saveModalData(type);
@@ -261,16 +261,16 @@ function saveModalData(type) {
   });
 
   if (!valid) {
-    showToast('❌ Täida kohustuslikud väljad!', 'error');
+    showToast(t('req_fields_err'), 'error');
     return;
   }
 
   if (currentEditId) {
     updateItem(config.collection, currentEditId, data);
-    showToast('✓ Uuendatud!');
+    showToast(t('toast_updated'));
   } else {
     addItem(config.collection, data);
-    showToast('✓ Lisatud!');
+    showToast(t('toast_added'));
   }
 
   closeModal();
@@ -292,7 +292,7 @@ function handleGalleryUpload(event) {
   reader.onload = function(e) {
     const srcInput = document.getElementById('mf_src');
     if (srcInput) srcInput.value = e.target.result;
-    showToast('✓ Pilt laetud! Salvesta kirje.');
+    showToast(t('gallery_loaded'));
   };
   reader.readAsDataURL(file);
 }
