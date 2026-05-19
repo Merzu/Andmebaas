@@ -23,68 +23,68 @@
   </div>
 
   <nav class="sidebar-nav">
-    <div class="nav-section-label">PÕHI</div>
+    <div class="nav-section-label" data-i18n="nav_main">PÕHI</div>
     <a class="nav-item active" onclick="showSection('dashboard')" data-section="dashboard">
-      <span class="nav-icon">⬛</span> Dashboard
+      <span class="nav-icon">⬛</span> <span data-i18n="nav_dashboard">Dashboard</span>
     </a>
     <a class="nav-item" onclick="showSection('notes')" data-section="notes">
-      <span class="nav-icon">📝</span> Märkmed
+      <span class="nav-icon">📝</span> <span data-i18n="nav_notes">Märkmed</span>
     </a>
     <a class="nav-item" onclick="showSection('search')" data-section="search">
-      <span class="nav-icon">🔍</span> Otsing
+      <span class="nav-icon">🔍</span> <span data-i18n="nav_search">Otsing</span>
     </a>
 
-    <div class="nav-section-label">IT TÖÖRIISTAD</div>
+    <div class="nav-section-label" data-i18n="nav_it">IT TÖÖRIISTAD</div>
     <a class="nav-item" onclick="showSection('commands')" data-section="commands">
-      <span class="nav-icon">⌨️</span> Käsud & Skriptid
+      <span class="nav-icon">⌨️</span> <span data-i18n="nav_commands">Käsud & Skriptid</span>
     </a>
     <a class="nav-item" onclick="showSection('passwords')" data-section="passwords">
-      <span class="nav-icon">🔐</span> Paroolid & Ligipääsud
+      <span class="nav-icon">🔐</span> <span data-i18n="nav_passwords">Paroolid & Ligipääsud</span>
     </a>
     <a class="nav-item" onclick="showSection('network')" data-section="network">
-      <span class="nav-icon">🌐</span> Võrgu Info
+      <span class="nav-icon">🌐</span> <span data-i18n="nav_network">Võrgu Info</span>
     </a>
     <a class="nav-item" onclick="showSection('projects')" data-section="projects">
-      <span class="nav-icon">💻</span> Projektid
+      <span class="nav-icon">💻</span> <span data-i18n="nav_projects">Projektid</span>
     </a>
     <a class="nav-item" onclick="showSection('tools')" data-section="tools">
-      <span class="nav-icon">🛠️</span> Tööriistad & Lingid
+      <span class="nav-icon">🛠️</span> <span data-i18n="nav_tools">Tööriistad & Lingid</span>
     </a>
 
-    <div class="nav-section-label">KOOL</div>
+    <div class="nav-section-label" data-i18n="nav_school">KOOL</div>
     <a class="nav-item" onclick="showSection('subjects')" data-section="subjects">
-      <span class="nav-icon">📚</span> Ained & Õppematerjal
+      <span class="nav-icon">📚</span> <span data-i18n="nav_subjects">Ained & Õppematerjal</span>
     </a>
     <a class="nav-item" onclick="showSection('assignments')" data-section="assignments">
-      <span class="nav-icon">📋</span> Kodutööd & Tähtajad
+      <span class="nav-icon">📋</span> <span data-i18n="nav_assignments">Kodutööd & Tähtajad</span>
     </a>
     <a class="nav-item" onclick="showSection('grades')" data-section="grades">
-      <span class="nav-icon">🎓</span> Hinded
+      <span class="nav-icon">🎓</span> <span data-i18n="nav_grades">Hinded</span>
     </a>
 
-    <div class="nav-section-label">ISIKLIK</div>
+    <div class="nav-section-label" data-i18n="nav_personal">ISIKLIK</div>
     <a class="nav-item" onclick="showSection('gallery')" data-section="gallery">
-      <span class="nav-icon">🖼️</span> Galerii
+      <span class="nav-icon">🖼️</span> <span data-i18n="nav_gallery">Galerii</span>
     </a>
     <a class="nav-item" onclick="showSection('contacts')" data-section="contacts">
-      <span class="nav-icon">👤</span> Kontaktid
+      <span class="nav-icon">👤</span> <span data-i18n="nav_contacts">Kontaktid</span>
     </a>
     <a class="nav-item" onclick="showSection('finances')" data-section="finances">
-      <span class="nav-icon">💰</span> Rahandus
+      <span class="nav-icon">💰</span> <span data-i18n="nav_finances">Rahandus</span>
     </a>
     <a class="nav-item" onclick="showSection('general')" data-section="general">
-      <span class="nav-icon">ℹ️</span> Üldinfo
+      <span class="nav-icon">ℹ️</span> <span data-i18n="nav_general">Üldinfo</span>
     </a>
     <a class="nav-item" onclick="showSection('links')" data-section="links">
-      <span class="nav-icon">🔗</span> Olulised Lingid
+      <span class="nav-icon">🔗</span> <span data-i18n="nav_links">Olulised Lingid</span>
     </a>
 
-    <div class="nav-section-label">SÜSTEEM</div>
+    <div class="nav-section-label" data-i18n="nav_system">SÜSTEEM</div>
     <a class="nav-item" onclick="showSection('settings')" data-section="settings">
-      <span class="nav-icon">⚙️</span> Seaded
+      <span class="nav-icon">⚙️</span> <span data-i18n="nav_settings">Seaded</span>
     </a>
     <a class="nav-item" onclick="doLogout()">
-      <span class="nav-icon">🚪</span> Logi välja
+      <span class="nav-icon">🚪</span> <span data-i18n="nav_logout">Logi välja</span>
     </a>
   </nav>
 </aside>
@@ -93,11 +93,20 @@
 <div class="topbar" id="topbar">
   <button class="hamburger" onclick="toggleSidebar()">☰</button>
   <div class="topbar-title" id="topbarTitle">Dashboard</div>
+  <div class="topbar-clock" id="topbarClock">
+    <span class="clock-time" id="clockTime">00:00:00</span>
+    <span class="clock-date" id="clockDate">01.01.2025</span>
+  </div>
   <div class="topbar-actions">
+    <button class="btn-lang" id="langBtn" onclick="toggleLang()" title="Vaheta keel / Switch language">
+      <span id="langFlag">🇬🇧</span>
+      <span id="langLabel">EN</span>
+    </button>
     <span class="user-badge" id="userBadge">…</span>
-    <button class="btn-export" onclick="exportData()" title="Ekspordi andmed">↓ Eksport</button>
-    <label class="btn-import" title="Impordi andmed">
-      ↑ Import <input type="file" id="importFile" accept=".json" onchange="importData(event)" style="display:none">
+    <button class="btn-export" id="btnExport" onclick="exportData()">↓ <span data-i18n="export">Eksport</span></button>
+    <label class="btn-import" id="btnImport">
+      ↑ <span data-i18n="import">Import</span>
+      <input type="file" id="importFile" accept=".json" onchange="importData(event)" style="display:none">
     </label>
   </div>
 </div>
@@ -317,41 +326,57 @@
   <!-- SETTINGS -->
   <section id="sec-settings" class="section">
     <div class="section-header">
-      <h2>Seaded</h2>
+      <h2 data-i18n="nav_settings">Seaded</h2>
     </div>
     <div class="settings-grid">
       <div class="settings-card">
-        <h3>🎨 Teema</h3>
+        <h3>🎨 <span data-i18n="set_theme">Teema</span></h3>
         <div class="theme-switcher">
-          <button onclick="setTheme('dark')" class="theme-btn" id="themeDark">Tume</button>
-          <button onclick="setTheme('light')" class="theme-btn" id="themeLight">Hele</button>
-          <button onclick="setTheme('cyber')" class="theme-btn" id="themeCyber">Cyber</button>
+          <button onclick="setTheme('dark')" class="theme-btn" id="themeDark" data-i18n="theme_dark">Tume</button>
+          <button onclick="setTheme('light')" class="theme-btn" id="themeLight" data-i18n="theme_light">Hele</button>
+          <button onclick="setTheme('cyber')" class="theme-btn" id="themeCyber" data-i18n="theme_cyber">Cyber</button>
         </div>
       </div>
       <div class="settings-card">
-        <h3>🔑 Muuda parooli</h3>
+        <h3>☀️ <span data-i18n="set_brightness">Heledus</span></h3>
+        <div class="brightness-control">
+          <span class="brightness-icon">🌑</span>
+          <input type="range" id="brightnessSlider" min="30" max="100" value="100" step="1" oninput="setBrightness(this.value)" />
+          <span class="brightness-icon">☀️</span>
+        </div>
+        <div class="brightness-value"><span id="brightnessVal">100</span>%</div>
+      </div>
+      <div class="settings-card">
+        <h3>🌐 <span data-i18n="set_language">Keel / Language</span></h3>
+        <div class="lang-switcher">
+          <button onclick="setLang('et')" class="lang-opt-btn" id="langOptEt">🇪🇪 Eesti</button>
+          <button onclick="setLang('en')" class="lang-opt-btn" id="langOptEn">🇬🇧 English</button>
+        </div>
+      </div>
+      <div class="settings-card">
+        <h3>🔑 <span data-i18n="set_password">Muuda parooli</span></h3>
         <div class="form-group">
-          <label>Praegune parool</label>
+          <label data-i18n="set_curpass">Praegune parool</label>
           <input type="password" id="curPass" placeholder="••••••••" />
         </div>
         <div class="form-group">
-          <label>Uus parool</label>
+          <label data-i18n="set_newpass">Uus parool</label>
           <input type="password" id="chgPass1" placeholder="••••••••" />
         </div>
         <div class="form-group">
-          <label>Korda</label>
+          <label data-i18n="set_repeatpass">Korda</label>
           <input type="password" id="chgPass2" placeholder="••••••••" />
         </div>
-        <button class="btn-add" onclick="changePassword()">Muuda parool</button>
+        <button class="btn-add" onclick="changePassword()" data-i18n="set_changepass">Muuda parool</button>
         <div id="passMsg" style="margin-top:8px;font-size:13px;"></div>
       </div>
       <div class="settings-card">
-        <h3>🗑️ Andmed</h3>
-        <p style="font-size:13px;opacity:0.7;margin-bottom:12px;">Kustuta kõik andmed (tagasipööramatu)</p>
-        <button class="btn-danger" onclick="clearAllData()">Kustuta kõik andmed</button>
+        <h3>🗑️ <span data-i18n="set_data">Andmed</span></h3>
+        <p style="font-size:13px;opacity:0.7;margin-bottom:12px;" data-i18n="set_data_desc">Kustuta kõik andmed (tagasipööramatu)</p>
+        <button class="btn-danger" onclick="clearAllData()" data-i18n="set_deleteall">Kustuta kõik andmed</button>
       </div>
       <div class="settings-card">
-        <h3>📊 Statistika</h3>
+        <h3>📊 <span data-i18n="set_stats">Statistika</span></h3>
         <div id="dataStats"></div>
       </div>
     </div>
