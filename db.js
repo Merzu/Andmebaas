@@ -236,7 +236,7 @@ function exportData() {
   a.download = `personaldb_backup_${new Date().toISOString().split('T')[0]}.json`;
   a.click();
   URL.revokeObjectURL(url);
-  showToast('✓ Andmed eksporditud!');
+  showToast(t('toast_exported'));
 }
 
 function importData(event) {
@@ -253,13 +253,13 @@ function importData(event) {
         data = parsed.data;
       }
 
-      if (!confirm('See kirjutab üle kõik praegused andmed. Jätka?')) return;
+      if (!confirm(t('confirm_import'))) return;
 
       saveDB(data);
-      showToast('✓ Andmed imporditud! Laadin uuesti...');
+      showToast(t('toast_imported'));
       setTimeout(() => window.location.reload(), 1000);
     } catch(err) {
-      showToast('❌ Vigane fail!', 'error');
+      showToast(t('toast_import_err'), 'error');
     }
   };
   reader.readAsText(file);
@@ -267,10 +267,10 @@ function importData(event) {
 }
 
 function clearAllData() {
-  if (confirm('Kustuta KÕIK andmed? Seda ei saa tagasi võtta!')) {
-    if (confirm('Oled absoluutselt kindel?')) {
+  if (confirm(t('confirm_clearall'))) {
+    if (confirm(t('confirm_clearall2'))) {
       localStorage.removeItem(DB_KEY);
-      showToast('Kõik andmed kustutatud.');
+      showToast(t('data_cleared'));
       setTimeout(() => window.location.reload(), 1000);
     }
   }
