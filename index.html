@@ -4,90 +4,528 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PersonalDB — Sisselogimine</title>
-<link rel="stylesheet" href="css/style.css">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --bg:#07080f;
+  --bg2:#0d0f1a;
+  --bg3:#141728;
+  --accent:#5b6af0;
+  --accent-glow:rgba(91,106,240,0.35);
+  --accent2:#00e5b4;
+  --text:#e8eaf6;
+  --text2:#8b90b8;
+  --text3:#454870;
+  --border:rgba(255,255,255,0.07);
+  --border2:rgba(255,255,255,0.13);
+  --error:#f05b7a;
+  --success:#00e5b4;
+  --r:10px;
+  --font:'Space Grotesk',sans-serif;
+  --mono:'JetBrains Mono',monospace;
+}
+
+body{
+  font-family:var(--font);
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  position:relative;
+}
+
+/* === ANIMATED BG === */
+.bg-canvas{
+  position:fixed;inset:0;z-index:0;
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 10%, rgba(91,106,240,0.12) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 80% 80%, rgba(0,229,180,0.08) 0%, transparent 55%),
+    radial-gradient(ellipse 40% 40% at 60% 20%, rgba(245,71,122,0.06) 0%, transparent 50%);
+}
+
+.grid{
+  position:fixed;inset:0;z-index:0;
+  background-image:
+    linear-gradient(rgba(91,106,240,0.05) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(91,106,240,0.05) 1px,transparent 1px);
+  background-size:60px 60px;
+  mask-image:radial-gradient(ellipse 100% 100% at 50% 50%,black 30%,transparent 80%);
+}
+
+.orb{
+  position:fixed;border-radius:50%;filter:blur(80px);opacity:0;
+  animation:orbFloat 8s ease-in-out infinite;
+}
+.orb1{width:500px;height:500px;background:rgba(91,106,240,0.15);top:-15%;left:-10%;animation-delay:0s;animation-duration:12s}
+.orb2{width:350px;height:350px;background:rgba(0,229,180,0.10);bottom:-10%;right:-5%;animation-delay:-4s;animation-duration:10s}
+.orb3{width:250px;height:250px;background:rgba(245,71,122,0.08);top:40%;left:60%;animation-delay:-7s;animation-duration:14s}
+
+@keyframes orbFloat{
+  0%{opacity:0;transform:translate(0,0) scale(1)}
+  20%{opacity:1}
+  50%{transform:translate(30px,-40px) scale(1.05)}
+  80%{opacity:1}
+  100%{opacity:0;transform:translate(0,0) scale(1)}
+}
+
+/* === PARTICLES === */
+.particles{position:fixed;inset:0;z-index:0;overflow:hidden}
+.particle{
+  position:absolute;width:2px;height:2px;
+  background:var(--accent);border-radius:50%;
+  animation:particleFall linear infinite;opacity:0;
+}
+@keyframes particleFall{
+  0%{opacity:0;transform:translateY(-10px)}
+  10%{opacity:0.6}
+  90%{opacity:0.2}
+  100%{opacity:0;transform:translateY(100vh)}
+}
+
+/* === CARD === */
+.card{
+  position:relative;z-index:10;
+  width:100%;max-width:440px;
+  margin:20px;
+  background:linear-gradient(135deg,rgba(255,255,255,0.04) 0%,rgba(255,255,255,0.01) 100%);
+  border:1px solid var(--border2);
+  border-radius:24px;
+  padding:40px 36px 36px;
+  box-shadow:
+    0 0 0 1px rgba(91,106,240,0.1),
+    0 24px 64px rgba(0,0,0,0.6),
+    inset 0 1px 0 rgba(255,255,255,0.07);
+  animation:cardIn .7s cubic-bezier(0.34,1.4,0.64,1) both;
+  backdrop-filter:blur(20px);
+}
+
+@keyframes cardIn{
+  from{opacity:0;transform:translateY(50px) scale(0.93)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
+
+/* === LOGO === */
+.logo{
+  display:flex;align-items:center;gap:14px;
+  margin-bottom:32px;
+}
+
+.logo-icon{
+  width:52px;height:52px;
+  background:linear-gradient(135deg,var(--accent),rgba(91,106,240,0.6));
+  border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;
+  box-shadow:0 8px 24px var(--accent-glow);
+  position:relative;
+  flex-shrink:0;
+}
+
+.logo-icon::after{
+  content:'';position:absolute;inset:-1px;
+  border-radius:15px;
+  background:linear-gradient(135deg,rgba(91,106,240,0.5),transparent);
+  mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+  mask-composite:exclude;
+  -webkit-mask-composite:xor;
+  padding:1px;
+}
+
+.logo-text h1{
+  font-size:22px;font-weight:700;letter-spacing:-0.5px;
+  line-height:1.1;
+}
+.logo-text p{
+  font-size:12px;color:var(--text3);
+  font-family:var(--mono);margin-top:2px;
+  letter-spacing:0.5px;
+}
+
+/* === DIVIDER === */
+.divider{
+  display:flex;align-items:center;gap:12px;
+  margin-bottom:28px;
+}
+.divider-line{flex:1;height:1px;background:var(--border)}
+.divider-text{
+  font-size:10px;font-family:var(--mono);
+  color:var(--text3);letter-spacing:2px;
+  text-transform:uppercase;
+}
+
+/* === ADMIN BADGE === */
+.admin-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:linear-gradient(135deg,rgba(91,106,240,0.15),rgba(0,229,180,0.08));
+  border:1px solid rgba(91,106,240,0.3);
+  border-radius:20px;padding:5px 14px;
+  font-size:11px;font-family:var(--mono);
+  color:var(--accent2);letter-spacing:1px;
+  margin-bottom:24px;
+}
+.admin-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--accent2);
+  box-shadow:0 0 6px var(--accent2);
+  animation:pulse 2s ease-in-out infinite;
+}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(0.8)}}
+
+/* === ERROR === */
+.error-box{
+  background:rgba(240,91,122,0.08);
+  border:1px solid rgba(240,91,122,0.25);
+  border-radius:var(--r);
+  padding:10px 14px;
+  font-size:13px;color:var(--error);
+  margin-bottom:20px;
+  display:none;
+  animation:shake .4s ease;
+}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+
+/* === FORM === */
+.form-group{margin-bottom:18px;position:relative}
+
+.form-group label{
+  display:block;
+  font-size:11px;font-weight:600;
+  letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--text3);margin-bottom:8px;
+  font-family:var(--mono);
+}
+
+.input-wrap{position:relative}
+
+.input-icon{
+  position:absolute;left:14px;top:50%;transform:translateY(-50%);
+  font-size:15px;pointer-events:none;opacity:0.5;
+}
+
+input[type=text],input[type=password]{
+  width:100%;
+  background:rgba(255,255,255,0.04);
+  border:1px solid var(--border2);
+  border-radius:var(--r);
+  padding:12px 14px 12px 42px;
+  color:var(--text);
+  font-size:14px;
+  font-family:var(--font);
+  outline:none;
+  transition:all .2s;
+  -webkit-appearance:none;
+}
+
+input:focus{
+  border-color:var(--accent);
+  background:rgba(91,106,240,0.06);
+  box-shadow:0 0 0 3px var(--accent-glow);
+}
+
+input::placeholder{color:var(--text3);font-size:13px}
+
+/* === BUTTON === */
+.btn-login{
+  width:100%;margin-top:8px;
+  background:linear-gradient(135deg,var(--accent) 0%,#7c4dff 100%);
+  color:#fff;border:none;border-radius:var(--r);
+  padding:14px;font-size:15px;font-weight:600;
+  font-family:var(--font);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  transition:all .2s;
+  letter-spacing:0.3px;
+  box-shadow:0 4px 20px var(--accent-glow);
+  position:relative;overflow:hidden;
+}
+
+.btn-login::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,0.15),transparent);
+  opacity:0;transition:opacity .2s;
+}
+.btn-login:hover{transform:translateY(-2px);box-shadow:0 8px 30px var(--accent-glow)}
+.btn-login:hover::before{opacity:1}
+.btn-login:active{transform:scale(0.98)}
+
+/* === FOOTER === */
+.card-footer{
+  margin-top:24px;padding-top:20px;
+  border-top:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+}
+
+.version{
+  font-size:11px;color:var(--text3);font-family:var(--mono);
+}
+
+.setup-link{
+  font-size:12px;color:var(--accent);
+  cursor:pointer;text-decoration:none;
+  transition:opacity .2s;font-weight:500;
+}
+.setup-link:hover{opacity:0.7}
+
+/* === SETUP FORM === */
+.setup-section{
+  margin-top:24px;padding-top:24px;
+  border-top:1px solid var(--border);
+  display:none;
+}
+
+.setup-section h3{
+  font-size:14px;font-weight:600;
+  color:var(--text2);margin-bottom:16px;
+  display:flex;align-items:center;gap:8px;
+}
+
+.btn-create{
+  width:100%;
+  background:rgba(0,229,180,0.1);
+  border:1px solid rgba(0,229,180,0.3);
+  color:var(--accent2);
+  border-radius:var(--r);padding:12px;
+  font-size:14px;font-weight:600;
+  font-family:var(--font);cursor:pointer;
+  transition:all .2s;margin-bottom:8px;
+}
+.btn-create:hover{background:rgba(0,229,180,0.18);transform:translateY(-1px)}
+
+.btn-cancel-s{
+  width:100%;background:transparent;
+  border:1px solid var(--border2);
+  color:var(--text3);border-radius:var(--r);
+  padding:10px;font-size:13px;cursor:pointer;
+  font-family:var(--font);transition:all .2s;
+}
+.btn-cancel-s:hover{background:rgba(255,255,255,0.04);color:var(--text2)}
+
+/* === SUCCESS MSG === */
+.success-box{
+  background:rgba(0,229,180,0.08);
+  border:1px solid rgba(0,229,180,0.25);
+  border-radius:var(--r);padding:10px 14px;
+  font-size:13px;color:var(--success);
+  margin-bottom:16px;display:none;
+}
+
+/* === SECURITY LINE === */
+.security-line{
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  margin-top:20px;
+  font-size:11px;color:var(--text3);font-family:var(--mono);
+}
+.security-line span{color:var(--accent2);font-size:14px}
+</style>
 </head>
-<body class="login-page">
+<body>
 
-<div class="login-bg">
-  <div class="grid-overlay"></div>
-  <div class="floating-shapes">
-    <span class="shape s1"></span>
-    <span class="shape s2"></span>
-    <span class="shape s3"></span>
-  </div>
-</div>
+<div class="bg-canvas"></div>
+<div class="grid"></div>
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+<div class="orb orb3"></div>
+<div class="particles" id="particles"></div>
 
-<div class="login-container">
-  <div class="login-card">
-    <div class="login-header">
-      <div class="logo-mark">
-        <span class="logo-bracket">[</span>
-        <span class="logo-text">PDB</span>
-        <span class="logo-bracket">]</span>
-      </div>
+<div class="card">
+
+  <div class="logo">
+    <div class="logo-icon">🗄️</div>
+    <div class="logo-text">
       <h1>PersonalDB</h1>
-      <p class="login-subtitle">Isiklik andmebaas — kõik ühes kohas</p>
+      <p>ANDMEBAAS v2.0</p>
     </div>
+  </div>
 
-    <div id="loginError" class="error-msg" style="display:none"></div>
+  <div class="admin-badge">
+    <div class="admin-dot"></div>
+    ADMIN SISSELOGIMINE
+  </div>
 
-    <div class="login-form">
-      <div class="form-group">
-        <label for="username">Kasutajanimi</label>
+  <div class="divider">
+    <div class="divider-line"></div>
+    <div class="divider-text">Logi sisse</div>
+    <div class="divider-line"></div>
+  </div>
+
+  <div class="error-box" id="errorBox">❌ Vale kasutajanimi või parool.</div>
+  <div class="success-box" id="successBox"></div>
+
+  <div id="loginForm">
+    <div class="form-group">
+      <label>Kasutajanimi</label>
+      <div class="input-wrap">
+        <span class="input-icon">👤</span>
         <input type="text" id="username" placeholder="kasutajanimi" autocomplete="username" />
       </div>
-      <div class="form-group">
-        <label for="password">Parool</label>
+    </div>
+    <div class="form-group">
+      <label>Parool</label>
+      <div class="input-wrap">
+        <span class="input-icon">🔑</span>
         <input type="password" id="password" placeholder="••••••••" autocomplete="current-password" />
       </div>
-      <button class="btn-login" onclick="doLogin()">
-        Sisene <span class="btn-arrow">→</span>
-      </button>
     </div>
+    <button class="btn-login" onclick="doLogin()">
+      Sisene süsteemi &nbsp;→
+    </button>
+  </div>
 
-    <div class="setup-hint" id="setupHint" style="display:none">
-      <p>⚙️ Esimene kord? <a href="#" onclick="showSetup()">Seadista konto</a></p>
-    </div>
+  <div class="card-footer">
+    <span class="version">v2.0 · GitHub Pages</span>
+    <span class="setup-link" id="setupToggle" onclick="toggleSetup()">⚙️ Loo konto</span>
+  </div>
 
-    <div class="setup-form" id="setupForm" style="display:none">
-      <h3>Konto seadistamine</h3>
-      <div class="form-group">
-        <label>Uus kasutajanimi</label>
-        <input type="text" id="newUser" placeholder="kasutajanimi" />
+  <div class="setup-section" id="setupSection">
+    <h3>🆕 Uue konto loomine</h3>
+    <div class="form-group">
+      <label>Kasutajanimi</label>
+      <div class="input-wrap">
+        <span class="input-icon">👤</span>
+        <input type="text" id="newUser" placeholder="min 3 tähemärki" />
       </div>
-      <div class="form-group">
-        <label>Uus parool</label>
+    </div>
+    <div class="form-group">
+      <label>Parool</label>
+      <div class="input-wrap">
+        <span class="input-icon">🔒</span>
         <input type="password" id="newPass" placeholder="min 6 tähemärki" />
       </div>
-      <div class="form-group">
-        <label>Korda parooli</label>
-        <input type="password" id="newPass2" placeholder="••••••••" />
+    </div>
+    <div class="form-group">
+      <label>Korda parooli</label>
+      <div class="input-wrap">
+        <span class="input-icon">🔒</span>
+        <input type="password" id="newPass2" placeholder="korda parooli" />
       </div>
-      <button class="btn-setup" onclick="doSetup()">Loo konto</button>
-      <button class="btn-cancel" onclick="hideSetup()">Tühista</button>
     </div>
-
-    <div class="login-footer">
-      <span class="version-tag">v2.0 · GitHub Pages</span>
-    </div>
+    <button class="btn-create" onclick="doSetup()">✓ Loo konto ja sisene</button>
+    <button class="btn-cancel-s" onclick="toggleSetup()">Tühista</button>
   </div>
+
+  <div class="security-line">
+    <span>🔒</span> Andmed salvestatakse ainult sinu brauseris
+  </div>
+
 </div>
 
-<script src="js/auth.js"></script>
 <script>
-  window.onload = function() {
-    if (!localStorage.getItem('pdb_user')) {
-      document.getElementById('setupHint').style.display = 'block';
-    }
-    if (isLoggedIn()) {
-      window.location.href = 'app.html';
-    }
-    document.getElementById('password').addEventListener('keypress', function(e) {
-      if (e.key === 'Enter') doLogin();
-    });
-  };
+// Particles
+(function(){
+  const c=document.getElementById('particles');
+  for(let i=0;i<35;i++){
+    const p=document.createElement('div');
+    p.className='particle';
+    p.style.cssText=`
+      left:${Math.random()*100}%;
+      width:${Math.random()<0.5?1:2}px;
+      height:${Math.random()<0.5?1:2}px;
+      animation-duration:${6+Math.random()*14}s;
+      animation-delay:${-Math.random()*15}s;
+      opacity:0;
+      background:${Math.random()<0.7?'#5b6af0':'#00e5b4'};
+    `;
+    c.appendChild(p);
+  }
+})();
+
+function hashPass(str){
+  let h=0;
+  for(let i=0;i<str.length;i++){h=((h<<5)-h)+str.charCodeAt(i);h=h&h;}
+  return h.toString(36);
+}
+
+function showError(msg){
+  const e=document.getElementById('errorBox');
+  e.textContent='❌ '+msg;e.style.display='block';
+  setTimeout(()=>e.style.display='none',4000);
+}
+
+function showSuccess(msg){
+  const s=document.getElementById('successBox');
+  s.textContent='✓ '+msg;s.style.display='block';
+  setTimeout(()=>s.style.display='none',3000);
+}
+
+function isLoggedIn(){
+  return sessionStorage.getItem('pdb_session')==='ok' && !!localStorage.getItem('pdb_user');
+}
+
+window.onload=function(){
+  if(isLoggedIn()) window.location.href='app.html';
+
+  const hasUser=localStorage.getItem('pdb_user');
+  if(!hasUser){
+    // Auto-show setup if no account
+    document.getElementById('setupSection').style.display='block';
+    document.getElementById('setupToggle').textContent='✕ Sulge';
+  }
+
+  document.getElementById('password').addEventListener('keypress',function(e){
+    if(e.key==='Enter') doLogin();
+  });
+  document.getElementById('username').addEventListener('keypress',function(e){
+    if(e.key==='Enter') document.getElementById('password').focus();
+  });
+  document.getElementById('newPass2').addEventListener('keypress',function(e){
+    if(e.key==='Enter') doSetup();
+  });
+};
+
+function toggleSetup(){
+  const s=document.getElementById('setupSection');
+  const t=document.getElementById('setupToggle');
+  const open=s.style.display==='block';
+  s.style.display=open?'none':'block';
+  t.textContent=open?'⚙️ Loo konto':'✕ Sulge';
+}
+
+function doLogin(){
+  const u=document.getElementById('username').value.trim();
+  const p=document.getElementById('password').value;
+  if(!u||!p){showError('Täida mõlemad väljad.');return;}
+
+  const stored=JSON.parse(localStorage.getItem('pdb_user')||'{}');
+  if(!stored.username){showError('Konto pole loodud. Kasuta "Loo konto" nuppu.');return;}
+  if(stored.username===u && stored.password===hashPass(p)){
+    sessionStorage.setItem('pdb_session','ok');
+    sessionStorage.setItem('pdb_username',u);
+    const btn=document.querySelector('.btn-login');
+    btn.textContent='✓ Sisenemas...';
+    btn.style.background='linear-gradient(135deg,#00e5b4,#00b48a)';
+    setTimeout(()=>window.location.href='app.html',600);
+  }else{
+    showError('Vale kasutajanimi või parool.');
+    document.getElementById('password').value='';
+    document.getElementById('password').focus();
+  }
+}
+
+function doSetup(){
+  const u=document.getElementById('newUser').value.trim();
+  const p=document.getElementById('newPass').value;
+  const p2=document.getElementById('newPass2').value;
+
+  if(!u||!p||!p2){showError('Täida kõik setup väljad.');return;}
+  if(u.length<3){showError('Kasutajanimi peab olema vähemalt 3 tähemärki.');return;}
+  if(p.length<6){showError('Parool peab olema vähemalt 6 tähemärki.');return;}
+  if(p!==p2){showError('Paroolid ei kattu!');return;}
+
+  const existing=localStorage.getItem('pdb_user');
+  if(existing && !confirm('Konto on juba olemas. Kirjuta üle?')) return;
+
+  localStorage.setItem('pdb_user',JSON.stringify({
+    username:u,password:hashPass(p),created:new Date().toISOString()
+  }));
+  sessionStorage.setItem('pdb_session','ok');
+  sessionStorage.setItem('pdb_username',u);
+  showSuccess('Konto loodud! Suunan...');
+  setTimeout(()=>window.location.href='app.html',800);
+}
 </script>
 </body>
 </html>
