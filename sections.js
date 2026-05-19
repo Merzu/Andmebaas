@@ -51,7 +51,7 @@ function renderDashboard() {
           <div class="ri-meta">${timeAgo(n.createdAt)}</div>
         </div>
       `).join('')
-    : '<div class="recent-item"><div class="ri-title" style="color:var(--text3)">Märkmeid pole veel</div></div>';
+    : '<div class="recent-item"><div class="ri-title" style="color:var(--text3)">' + t('no_notes') + '</div></div>';
 
   // Upcoming deadlines
   const deadlines = Assignments.getUpcoming();
@@ -62,7 +62,7 @@ function renderDashboard() {
           <div class="ri-meta">${deadlineBadge(a.deadline)} · ${escapeHtml(a.subject || '')}</div>
         </div>
       `).join('')
-    : '<div class="recent-item"><div class="ri-title" style="color:var(--text3)">Lähenevaid tähtaegu pole</div></div>';
+    : '<div class="recent-item"><div class="ri-title" style="color:var(--text3)">' + t('no_deadlines') + '</div></div>';
 
   // Recent projects
   const projects = Projects.getAll().slice(0, 4);
@@ -73,7 +73,7 @@ function renderDashboard() {
           <div class="ri-meta">${escapeHtml(p.status || '')} · ${escapeHtml(p.stack || '').split(',')[0]}</div>
         </div>
       `).join('')
-    : '<div class="recent-item"><div class="ri-title" style="color:var(--text3)">Projekte pole veel</div></div>';
+    : '<div class="recent-item"><div class="ri-title" style="color:var(--text3)">' + t('no_projects') + '</div></div>';
 }
 
 // ========== NOTES ==========
@@ -94,7 +94,7 @@ function renderNotes(filter, tagFilter) {
   }
 
   const container = document.getElementById('notesList');
-  if (!notes.length) { container.innerHTML = renderEmptyState('📝', 'Märkmeid pole. Lisa esimene!'); return; }
+  if (!notes.length) { container.innerHTML = renderEmptyState('📝', t('empty_notes')); return; }
 
   container.innerHTML = notes.map(n => `
     <div class="card">
@@ -122,7 +122,7 @@ function renderCommands(searchVal, catVal) {
   if (cat) cmds = cmds.filter(c => c.category === cat);
 
   const container = document.getElementById('commandsList');
-  if (!cmds.length) { container.innerHTML = renderEmptyState('⌨️', 'Käske pole. Lisa esimene!'); return; }
+  if (!cmds.length) { container.innerHTML = renderEmptyState('⌨️', t('empty_commands')); return; }
 
   container.innerHTML = cmds.map(c => `
     <div class="cmd-card">
@@ -152,7 +152,7 @@ function renderPasswords() {
   if (q) passes = passes.filter(p => p.service?.toLowerCase().includes(q) || p.username?.toLowerCase().includes(q));
 
   const container = document.getElementById('passwordsList');
-  if (!passes.length) { container.innerHTML = renderEmptyState('🔐', 'Paroolid pole. Lisa esimene!'); return; }
+  if (!passes.length) { container.innerHTML = renderEmptyState('🔐', t('empty_passwords')); return; }
 
   container.innerHTML = passes.map(p => `
     <div class="card">
@@ -179,7 +179,7 @@ function filterPasswords() { renderPasswords(); }
 function renderNetwork() {
   const nets = Network.getAll();
   const container = document.getElementById('networkList');
-  if (!nets.length) { container.innerHTML = renderEmptyState('🌐', 'Võrguinfot pole. Lisa esimene!'); return; }
+  if (!nets.length) { container.innerHTML = renderEmptyState('🌐', t('empty_network')); return; }
 
   container.innerHTML = nets.map(n => `
     <div class="card">
@@ -210,7 +210,7 @@ function renderProjects() {
   if (status) projs = projs.filter(p => p.status === status);
 
   const container = document.getElementById('projectsList');
-  if (!projs.length) { container.innerHTML = renderEmptyState('💻', 'Projekte pole. Lisa esimene!'); return; }
+  if (!projs.length) { container.innerHTML = renderEmptyState('💻', t('empty_projects')); return; }
 
   const statusClass = { 'Aktiivne': 'active', 'Paus': 'pause', 'Lõpetatud': 'done', 'Idee': 'idea' };
 
@@ -237,7 +237,7 @@ function filterProjects() { renderProjects(); }
 function renderTools() {
   const tools = Tools.getAll();
   const container = document.getElementById('toolsList');
-  if (!tools.length) { container.innerHTML = renderEmptyState('🛠️', 'Tööriistu pole. Lisa esimene!'); return; }
+  if (!tools.length) { container.innerHTML = renderEmptyState('🛠️', t('empty_tools')); return; }
 
   container.innerHTML = tools.map(t => `
     <div class="tool-card" onclick="${t.url ? `window.open('${escapeHtml(t.url)}','_blank')` : ''}">
@@ -253,7 +253,7 @@ function renderTools() {
 function renderSubjects() {
   const subs = Subjects.getAll();
   const container = document.getElementById('subjectsList');
-  if (!subs.length) { container.innerHTML = renderEmptyState('📚', 'Aineid pole. Lisa esimene!'); return; }
+  if (!subs.length) { container.innerHTML = renderEmptyState('📚', t('empty_subjects')); return; }
 
   container.innerHTML = subs.map(s => `
     <div class="card">
@@ -286,7 +286,7 @@ function renderAssignments() {
   });
 
   const container = document.getElementById('assignmentsList');
-  if (!assigns.length) { container.innerHTML = renderEmptyState('📋', 'Kodutöid pole. Lisa esimene!'); return; }
+  if (!assigns.length) { container.innerHTML = renderEmptyState('📋', t('empty_assignments')); return; }
 
   container.innerHTML = assigns.map(a => `
     <div class="assign-item ${a.done ? 'done' : ''}">
@@ -324,8 +324,8 @@ function renderGrades() {
     avgEl.innerHTML = `
       <div class="grade-avg-num">${avg}</div>
       <div>
-        <div style="font-size:15px;font-weight:700">Keskmine hinne</div>
-        <div class="grade-avg-label">${grades.length} hinnet kokku</div>
+        <div style="font-size:15px;font-weight:700">${t('grade_avg_label')}</div>
+        <div class="grade-avg-label">${grades.length} ${t('grades_total')}</div>
       </div>
     `;
   } else {
@@ -333,7 +333,7 @@ function renderGrades() {
   }
 
   const container = document.getElementById('gradesList');
-  if (!grades.length) { container.innerHTML = renderEmptyState('🎓', 'Hindeid pole. Lisa esimene!'); return; }
+  if (!grades.length) { container.innerHTML = renderEmptyState('🎓', t('empty_grades')); return; }
 
   container.innerHTML = grades.map(g => `
     <div class="card">
@@ -356,7 +356,7 @@ function renderGallery() {
   if (filter) items = items.filter(i => i.album === filter);
 
   const container = document.getElementById('galleryGrid');
-  if (!items.length) { container.innerHTML = renderEmptyState('🖼️', 'Pilte pole. Lisa esimene!'); return; }
+  if (!items.length) { container.innerHTML = renderEmptyState('🖼️', t('empty_gallery')); return; }
 
   container.innerHTML = items.map(item => `
     <div class="gallery-item">
@@ -384,7 +384,7 @@ function renderContacts() {
   contacts.sort((a,b) => (a.name || '').localeCompare(b.name || ''));
 
   const container = document.getElementById('contactsList');
-  if (!contacts.length) { container.innerHTML = renderEmptyState('👤', 'Kontakte pole. Lisa esimene!'); return; }
+  if (!contacts.length) { container.innerHTML = renderEmptyState('👤', t('empty_contacts')); return; }
 
   container.innerHTML = contacts.map(c => `
     <div class="contact-card">
@@ -429,7 +429,7 @@ function renderFinances() {
   if (filter) finances = finances.filter(f => f.type === filter);
 
   const container = document.getElementById('financesList');
-  if (!finances.length) { container.innerHTML = renderEmptyState('💰', 'Kandeid pole. Lisa esimene!'); return; }
+  if (!finances.length) { container.innerHTML = renderEmptyState('💰', t('empty_finances')); return; }
 
   container.innerHTML = finances.map(f => `
     <div class="card">
@@ -453,7 +453,7 @@ function filterFinances() { renderFinances(); }
 function renderGeneral() {
   const items = General.getAll();
   const container = document.getElementById('generalList');
-  if (!items.length) { container.innerHTML = renderEmptyState('ℹ️', 'Üldinfot pole. Lisa esimene!'); return; }
+  if (!items.length) { container.innerHTML = renderEmptyState('ℹ️', t('empty_general')); return; }
 
   container.innerHTML = items.map(item => `
     <div class="card">
@@ -472,7 +472,7 @@ function renderGeneral() {
 function renderLinks() {
   const links = Links.getAll();
   const container = document.getElementById('linksList');
-  if (!links.length) { container.innerHTML = renderEmptyState('🔗', 'Linke pole. Lisa esimene!'); return; }
+  if (!links.length) { container.innerHTML = renderEmptyState('🔗', t('empty_links')); return; }
 
   container.innerHTML = links.map(l => `
     <a class="link-card" href="${escapeHtml(l.url || '#')}" target="_blank">
@@ -500,9 +500,9 @@ function renderSettings() {
 
 // ========== HELPER ==========
 function confirmDelete(collection, id, sectionName) {
-  if (confirm('Kustuta see kirje?')) {
+  if (confirm(t('confirm_delete'))) {
     deleteItem(collection, id);
-    showToast('✓ Kustutatud!');
+    showToast(t('toast_deleted'));
     renderSection(sectionName);
     if (sectionName === 'dashboard') renderDashboard();
   }
