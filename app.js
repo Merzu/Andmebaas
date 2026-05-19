@@ -7,6 +7,11 @@ window.onload = function() {
   document.getElementById('userBadge').textContent = username;
 
   loadTheme();
+  loadBrightness();
+  applyTranslations();
+  updateLangBtn();
+  updateLangOptBtns();
+  startClock();
   showSection('dashboard');
 
   document.addEventListener('keydown', function(e) {
