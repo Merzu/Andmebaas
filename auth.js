@@ -25,7 +25,7 @@ function requireLogin() {
 }
 
 function doLogout() {
-  if (confirm('Kas oled kindel, et soovid välja logida?')) {
+  if (confirm(t('confirm_logout'))) {
     sessionStorage.removeItem('pdb_session');
     sessionStorage.removeItem('pdb_username');
     window.location.href = 'index.html';
@@ -42,17 +42,17 @@ function changePassword() {
 
   if (stored.password !== hashPass(cur)) {
     msg.style.color = '#f05b7a';
-    msg.textContent = '❌ Vale praegune parool.';
+    msg.textContent = t('pass_wrong');
     return;
   }
   if (n1.length < 6) {
     msg.style.color = '#f05b7a';
-    msg.textContent = '❌ Uus parool peab olema vähemalt 6 tähemärki.';
+    msg.textContent = t('pass_short');
     return;
   }
   if (n1 !== n2) {
     msg.style.color = '#f05b7a';
-    msg.textContent = '❌ Uued paroolid ei kattu.';
+    msg.textContent = t('pass_mismatch');
     return;
   }
 
@@ -60,7 +60,7 @@ function changePassword() {
   localStorage.setItem('pdb_user', JSON.stringify(stored));
 
   msg.style.color = '#00e5b4';
-  msg.textContent = '✓ Parool muudetud!';
+  msg.textContent = t('pass_changed');
   document.getElementById('curPass').value = '';
   document.getElementById('chgPass1').value = '';
   document.getElementById('chgPass2').value = '';
