@@ -16,88 +16,12 @@ function isLoggedIn() {
   return session === 'ok' && !!user;
 }
 
-function doLogin() {
-  const u = document.getElementById('username').value.trim();
-  const p = document.getElementById('password').value;
-  const err = document.getElementById('loginError');
-
-  if (!u || !p) {
-    showLoginError('Palun täida kõik väljad.');
-    return;
+function requireLogin() {
+  if (!isLoggedIn()) {
+    window.location.href = 'index.html';
+    return false;
   }
-
-  const stored = JSON.parse(localStorage.getItem('pdb_user') || '{}');
-  if (!stored.username) {
-    showLoginError('Konto pole seadistatud. Loo kõigepealt konto.');
-    document.getElementById('setupHint').style.display = 'block';
-    return;
-  }
-
-  if (stored.username === u && stored.password === hashPass(p)) {
-    sessionStorage.setItem('pdb_session', 'ok');
-    sessionStorage.setItem('pdb_username', u);
-    window.location.href = 'app.html';
-  } else {
-    showLoginError('Vale kasutajanimi või parool.');
-    document.getElementById('password').value = '';
-    document.getElementById('password').focus();
-  }
-}
-
-function showLoginError(msg) {
-  const err = document.getElementById('loginError');
-  err.textContent = msg;
-  err.style.display = 'block';
-  setTimeout(() => { err.style.display = 'none'; }, 4000);
-}
-
-function showSetup() {
-  document.getElementById('setupForm').style.display = 'block';
-  document.getElementById('setupHint').style.display = 'none';
-}
-
-function hideSetup() {
-  document.getElementById('setupForm').style.display = 'none';
-  document.getElementById('setupHint').style.display = 'block';
-}
-
-function doSetup() {
-  const u = document.getElementById('newUser').value.trim();
-  const p = document.getElementById('newPass').value;
-  const p2 = document.getElementById('newPass2').value;
-
-  if (!u || !p || !p2) {
-    alert('Palun täida kõik väljad.');
-    return;
-  }
-  if (u.length < 3) {
-    alert('Kasutajanimi peab olema vähemalt 3 tähemärki.');
-    return;
-  }
-  if (p.length < 6) {
-    alert('Parool peab olema vähemalt 6 tähemärki.');
-    return;
-  }
-  if (p !== p2) {
-    alert('Paroolid ei kattu!');
-    return;
-  }
-
-  const existing = localStorage.getItem('pdb_user');
-  if (existing) {
-    if (!confirm('Konto on juba olemas. Kas kirjutada üle?')) return;
-  }
-
-  localStorage.setItem('pdb_user', JSON.stringify({
-    username: u,
-    password: hashPass(p),
-    created: new Date().toISOString()
-  }));
-
-  sessionStorage.setItem('pdb_session', 'ok');
-  sessionStorage.setItem('pdb_username', u);
-  alert('Konto loodud! Logid sisse...');
-  window.location.href = 'app.html';
+  return true;
 }
 
 function doLogout() {
@@ -106,14 +30,6 @@ function doLogout() {
     sessionStorage.removeItem('pdb_username');
     window.location.href = 'index.html';
   }
-}
-
-function requireLogin() {
-  if (!isLoggedIn()) {
-    window.location.href = 'index.html';
-    return false;
-  }
-  return true;
 }
 
 function changePassword() {
@@ -125,17 +41,17 @@ function changePassword() {
   const stored = JSON.parse(localStorage.getItem('pdb_user') || '{}');
 
   if (stored.password !== hashPass(cur)) {
-    msg.style.color = '#ff4444';
+    msg.style.color = '#f05b7a';
     msg.textContent = '❌ Vale praegune parool.';
     return;
   }
   if (n1.length < 6) {
-    msg.style.color = '#ff4444';
+    msg.style.color = '#f05b7a';
     msg.textContent = '❌ Uus parool peab olema vähemalt 6 tähemärki.';
     return;
   }
   if (n1 !== n2) {
-    msg.style.color = '#ff4444';
+    msg.style.color = '#f05b7a';
     msg.textContent = '❌ Uued paroolid ei kattu.';
     return;
   }
@@ -143,7 +59,7 @@ function changePassword() {
   stored.password = hashPass(n1);
   localStorage.setItem('pdb_user', JSON.stringify(stored));
 
-  msg.style.color = 'var(--accent)';
+  msg.style.color = '#00e5b4';
   msg.textContent = '✓ Parool muudetud!';
   document.getElementById('curPass').value = '';
   document.getElementById('chgPass1').value = '';
